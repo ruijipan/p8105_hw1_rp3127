@@ -1,0 +1,69 @@
+---
+title: "p8105_hw1_rp3127.Rmd"
+output: github_document
+date: "2022-12-22"
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+## Problem 0.1
+create a public GitHub repo + local R Project; p8105_hw1_rp3127, but that’s not required create a single .Rmd file named p8105_hw1_rp3127.Rmd that renders to github_document. submit a link to your repo via Courseworks.
+
+## Problem 0.2
+This “problem” focuses on correct styling for your solutions to Problems 1 and 2. We will look for:
+meaningful variable / object names
+readable code (one command per line; adequate whitespace and indentation; etc)
+clearly-written text to explain code and results
+a lack of superfluous code (no unused variables are defined; no extra library calls; etc.)
+
+## Problem 1
+```{r}
+data("penguins", package = "palmerpenguins")
+penguins
+```
+The dataset contains observations on `r nrow(penguins)` and `r ncol(penguins)` variables. The variables include species, island, bill_length, bill_depth, flipper_length, body_mass, sex, year.
+The mean flipper length of penguins with nonmissing values in this dataset is `r round(mean(pull(penguins, var=flipper_length_mm), na.rm=TRUE))` mm.
+
+Make a scatterplot of flipper_length_mm (y) vs bill_length_mm (x); color points using the species variable (adding color = ... inside of aes in your ggplot code should help).
+
+Export your first scatterplot to your project directory using ggsave
+```{r}
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) + geom_point()
+ggsave("p8105_hw1_scatterplot.pdf")
+```
+
+## Problem 2
+### Create a data frame comprised of:
+
+a random sample of size 10 from a standard Normal distribution
+a logical vector indicating whether elements of the sample are greater than 0
+a character vector of length 10
+a factor vector of length 10, with 3 different factor “levels”
+Try to take the mean of each variable in your dataframe. What works and what doesn’t?
+```{r}
+problem2_df =
+  tibble(
+    var_numeric = rnorm(10),
+    var_logical = var_numeric > 0,
+    var_char = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+    var_factor = factor(c("low", "low", "low", "mod", "mod", "mod", "mod", "high", "high", "high"))
+  )
+problem2_df
+```
+
+### Try to take the mean of each variable in your dataframe. What works and what doesn’t? 
+```{r}
+mean(pull(problem2_df, var_numeric))
+mean(pull(problem2_df, var_logical))
+mean(pull(problem2_df, var_char))
+mean(pull(problem2_df, var_factor))
+```
+
+### In some cases, you can explicitly convert variables from one type to another. Write a code chunk that applies the as.numeric function to the logical, character, and factor variables (please show this chunk but not the output). What happens, and why? Does this help explain what happens when you try to take the mean?
+```{r}
+as.numeric(pull(problem2_df, var_logical))
+as.numeric(pull(problem2_df, var_char))
+as.numeric(pull(problem2_df, var_factor))
+```
+
